@@ -1,8 +1,13 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthSideImg from "../components/AuthSideImg";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { AuthContextValue, ResponseBody } from "../types/types";
+import { SERVER_URL } from "../constants";
+import { toast } from "react-toastify";
 
 const schema = yup
   .object({
@@ -20,6 +25,17 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>;
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { token, handleSetToken } = useContext(AuthContext) as AuthContextValue;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token]);
+
   const {
     register,
     handleSubmit,
@@ -27,7 +43,32 @@ const Login = () => {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
-  const onSubmit = (data: FormData) => console.log(data);
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${SERVER_URL}/auth/login`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const resData: ResponseBody = await res.json();
+
+      if (!res.ok) {
+        toast.error(resData.message);
+        setIsLoading(false);
+      }
+      if (resData.data) {
+        toast.success(resData.message);
+        handleSetToken(resData.data?.token);
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      toast.error("Something went wrong");
+    }
+  };
 
   return (
     <main className="lg:flex h-screen min-h-[600px]">
@@ -108,10 +149,33 @@ const Login = () => {
 
             <div>
               <button
+                disabled={isLoading}
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-pri px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pri-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-pri px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pri-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 Sign in
+                {isLoading && (
+                  <svg
+                    className="animate-spin relative left-10  h-6 w-6 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                )}
               </button>
             </div>
           </form>
