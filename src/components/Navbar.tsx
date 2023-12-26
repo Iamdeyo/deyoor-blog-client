@@ -28,9 +28,9 @@ const Navbar = () => {
       <>
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 text-text-light">
           <div className="relative flex gap-4 h-16 items-center justify-between">
-            <div className="flex flex-shrink-0 items-center">
+            <Link to={"/"} className="flex flex-shrink-0 items-center">
               <img className="h-10 w-auto" src="/img/dt.png" alt="dt-blogs" />
-            </div>
+            </Link>
             <div className="mr-auto gap-2 items-center rounded-[40px] px-2 h-10 bg-slate-100 text-text-light hidden md:flex">
               <span>
                 <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
