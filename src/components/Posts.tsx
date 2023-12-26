@@ -1,5 +1,6 @@
 import { SetStateAction, useState } from "react";
 import Post from "./Post";
+import useGetPosts from "../hooks/useGetPosts";
 
 const Posts = () => {
   const [filterPost, setFilterPost] = useState<"allPost" | "myPost">("myPost");
@@ -7,6 +8,7 @@ const Posts = () => {
     // do other things
     setFilterPost(filter);
   };
+  const { data, isLoading, error } = useGetPosts();
   return (
     <>
       <main className="mx-auto max-w-7xl pt-6 px-2 sm:px-6 lg:px-8">
@@ -34,7 +36,11 @@ const Posts = () => {
           <div className="border-b w-full absolute bottom-0 -z-[1] left-0"></div>
         </div>
         <section>
-          <Post />
+          {data?.map((item) => (
+            <div key={item.id}>
+              <Post data={item} />
+            </div>
+          ))}
         </section>
       </main>
     </>

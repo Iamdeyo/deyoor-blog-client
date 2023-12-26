@@ -24,11 +24,18 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
     setUser(user);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    setToken(null);
+    setUser(null);
+  };
+
   const value: AuthContextValue = {
     user,
     token,
     handleSetToken,
     handleSetUser,
+    handleLogout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

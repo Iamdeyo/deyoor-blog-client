@@ -1,6 +1,10 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import useGetUser from "./hooks/useGetUser";
+
 function App() {
+  const { isLoading } = useGetUser();
+
   return (
     <>
       <Navbar />

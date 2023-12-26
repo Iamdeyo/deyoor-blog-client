@@ -1,6 +1,11 @@
-import { useState } from "react";
-import TipTapEditor from "./editor/TipTapEditor";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
+import TipTapEditor from "./editor/TipTapEditor";
+import { SERVER_URL } from "../constants";
+import { AuthContext } from "../context/AuthContext";
+import { AuthContextValue, ResponseBody } from "../types/types";
 
 const Editor = () => {
   const [content, setContent] = useState<string>("");
@@ -8,6 +13,9 @@ const Editor = () => {
   const [tag, setTag] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
   const [coverImg, setCoverImg] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { token } = useContext(AuthContext) as AuthContextValue;
+  const navigate = useNavigate();
 
   const removeTag = (tagToRemove: string) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
@@ -24,6 +32,53 @@ const Editor = () => {
   const handleSetContent = (content: string) => {
     setContent(content);
   };
+
+  const checkRequiredFields = () => {
+    if (content === "") {
+      toast.error("Content is required");
+      return false;
+    } else if (title === "") {
+      toast.error("Title is required");
+      return false;
+    } else if (coverImg === null) {
+      toast.error("Cover image is required");
+      return false;
+    } else return true;
+  };
+
+  const handleSubmit = async () => {
+    if (checkRequiredFields()) {
+      setIsLoading(true);
+
+      try {
+        const body = new FormData();
+        body.append("title", title);
+        body.append("content", content);
+        body.append("image", coverImg);
+        tags.forEach((tag) => body.append("tags", tag));
+
+        const res = await fetch(`${SERVER_URL}/post`, {
+          method: "POST",
+          body: body,
+          headers: { authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) {
+          toast.error("An error occurred");
+          setIsLoading(false);
+        }
+        const data: ResponseBody = await res.json();
+        if (data.data) {
+          setIsLoading(false);
+          toast.success("Post created successfully");
+          navigate("/");
+        }
+      } catch (err: any) {
+        setIsLoading(false);
+        toast.error(err.message);
+      }
+    }
+  };
+
   return (
     <>
       <div className="pb-10 bg-white">
@@ -124,8 +179,9 @@ const Editor = () => {
         </div>
 
         <button
-          className=" px-3 py-2 w-full sm:max-w-[120px] text-center bg-pri mt-10 text-white rounded-md hover:bg-pri-hover"
-          onClick={() => console.log(content)}
+          disabled={isLoading}
+          className=" px-3 py-2 w-full sm:max-w-[120px] text-center bg-pri mt-10 text-white rounded-md hover:bg-pri-hover disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => handleSubmit()}
         >
           save
         </button>

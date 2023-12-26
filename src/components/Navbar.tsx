@@ -1,16 +1,28 @@
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
   PencilSquareIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import { AuthContext } from "../context/AuthContext";
+import { AuthContextValue } from "../types/types";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const Navbar = () => {
+  const { user, token, handleLogout } = useContext(
+    AuthContext
+  ) as AuthContextValue;
+
+  const logout = () => {
+    handleLogout();
+    toast.info(`logged out`);
+  };
   return (
     <Disclosure as="nav" className="border-b-2">
       <>
@@ -28,91 +40,115 @@ const Navbar = () => {
                 className="bg-transparent pr-2 text-text-dark outline-none h-full w-full"
               />
             </div>
-            <div className="flex items-center">
-              <button
-                type="button"
-                className="relative rounded-full p-1 hover:text-pri-hover md:hidden"
-              >
-                <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="relative rounded-full p-1 hover:text-pri-hover flex items-center gap-1"
-              >
-                <PencilSquareIcon className="h-6 w-6" aria-hidden="true" />
-                <span className="hidden md:block font-thin">Write</span>
-              </button>
-              <button
-                type="button"
-                className="relative rounded-full p-1 hover:text-pri-hover focus:outline-none focus:ring-1 focus:ring-pri"
-              >
-                <BellIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-
-              {/* Profile dropdown */}
-              <Menu as="div" className="relative ml-3">
-                <div>
-                  <Menu.Button className="relative flex rounded-full bg-pri text-sm focus:outline-none focus:ring-2 focus:ring-pri ">
-                    <img
-                      className="h-8 w-8 rounded-full"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
-                  </Menu.Button>
-                </div>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
+            {token ? (
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  className="relative rounded-full p-1 hover:text-pri-hover md:hidden"
                 >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          href="#"
-                          className={classNames(
-                            active ? "bg-gray-100" : "",
-                            "block px-4 py-2 text-sm text-gray-700"
-                          )}
-                        >
-                          Your Profile
-                        </a>
+                  <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+                <Link
+                  to={"/post/create"}
+                  type="button"
+                  className="relative rounded-full p-1 hover:text-pri-hover flex items-center gap-1"
+                >
+                  <PencilSquareIcon className="h-6 w-6" aria-hidden="true" />
+                  <span className="hidden md:block font-thin">Write</span>
+                </Link>
+                <button
+                  type="button"
+                  className="relative rounded-full p-1 hover:text-pri-hover focus:outline-none focus:ring-1 focus:ring-pri"
+                >
+                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+
+                {/* Profile dropdown */}
+                <Menu as="div" className="relative ml-3">
+                  <div>
+                    <Menu.Button className="relative flex rounded-full bg-pri text-sm focus:outline-none focus:ring-2 focus:ring-pri ">
+                      {user?.displayPhoto ? (
+                        <img
+                          className="h-8 w-8 rounded-full"
+                          src={user.displayPhoto}
+                          alt={user.username}
+                        />
+                      ) : (
+                        <span className="h-8 w-8 rounded-full text-white font-bold leading-8 text-sm">
+                          {user?.username.slice(0, 2).toUpperCase()}
+                        </span>
                       )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          href="#"
-                          className={classNames(
-                            active ? "bg-gray-100" : "",
-                            "block px-4 py-2 text-sm text-gray-700"
-                          )}
-                        >
-                          Settings
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          href="#"
-                          className={classNames(
-                            active ? "bg-gray-100" : "",
-                            "block px-4 py-2 text-sm text-gray-700"
-                          )}
-                        >
-                          Sign out
-                        </a>
-                      )}
-                    </Menu.Item>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
-            </div>
+                    </Menu.Button>
+                  </div>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            href="#"
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
+                            Your Profile
+                          </a>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            href="#"
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
+                            Settings
+                          </a>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={logout}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700 w-full text-start"
+                            )}
+                          >
+                            Sign out
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1">
+                <Link
+                  to={"/login"}
+                  className="px-3 py-1.5 rounded-md ring-1 ring-transparent ring-inset hover:underline hover:text-pri-hover focus:ring-2 focus:ring-pri-hover active:bg-pri active:text-white transition-all duration-300"
+                >
+                  Login
+                </Link>
+                <Link
+                  to={"/register"}
+                  className="px-3 py-1.5 rounded-md border-0 ring-1 text-pri ring-pri hover:ring-pri-hover hover:text-pri-hover focus:ring-2 active:bg-pri active:text-white transition-all duration-300"
+                >
+                  Create acccount
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </>
