@@ -3,7 +3,7 @@ import Editor from "../components/Editor";
 const CreatePost = () => {
   return (
     <>
-      <Editor />
+      <Editor data={null} />
     </>
   );
 };

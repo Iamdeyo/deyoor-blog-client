@@ -5,13 +5,13 @@ import { toast } from "react-toastify";
 import TipTapEditor from "./editor/TipTapEditor";
 import { SERVER_URL } from "../constants";
 import { AuthContext } from "../context/AuthContext";
-import { AuthContextValue, ResponseBody } from "../types/types";
+import { AuthContextValue, PostType, ResponseBody } from "../types/types";
 
-const Editor = () => {
-  const [content, setContent] = useState<string>("");
-  const [title, setTitle] = useState<string>("");
+const Editor = ({ data }: { data: PostType | null }) => {
+  const [content, setContent] = useState<string>(data ? data.content : "");
+  const [title, setTitle] = useState<string>(data ? data.title : "");
   const [tag, setTag] = useState<string>("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(data ? data.tags : []);
   const [coverImg, setCoverImg] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token } = useContext(AuthContext) as AuthContextValue;
@@ -40,13 +40,17 @@ const Editor = () => {
     } else if (title === "") {
       toast.error("Title is required");
       return false;
-    } else if (coverImg === null) {
+    } else if (coverImg === null && data === null) {
       toast.error("Cover image is required");
       return false;
     } else return true;
   };
 
   const handleSubmit = async () => {
+    const apiUrl = data
+      ? `${SERVER_URL}/post/${data.id}`
+      : `${SERVER_URL}/post`;
+    const apiMethod = data ? "PATCH" : "POST";
     if (checkRequiredFields()) {
       setIsLoading(true);
 
@@ -54,11 +58,13 @@ const Editor = () => {
         const body = new FormData();
         body.append("title", title);
         body.append("content", content);
-        body.append("image", coverImg);
+        if (coverImg) {
+          body.append("image", coverImg);
+        }
         tags.forEach((tag) => body.append("tags", tag));
 
-        const res = await fetch(`${SERVER_URL}/post`, {
-          method: "POST",
+        const res = await fetch(apiUrl, {
+          method: apiMethod,
           body: body,
           headers: { authorization: `Bearer ${token}` },
         });
@@ -69,7 +75,7 @@ const Editor = () => {
         const data: ResponseBody = await res.json();
         if (data.data) {
           setIsLoading(false);
-          toast.success("Post created successfully");
+          toast.success(data.message);
           navigate("/");
         }
       } catch (err: any) {
@@ -104,8 +110,7 @@ const Editor = () => {
             htmlFor="tags"
             className="block text-sm font-medium leading-6 text-gray-900"
           >
-            {" "}
-            Tags{" "}
+            Tags
           </label>
           <div className="mt-2 flex flex-wrap px-2 items-center border-0 ring-1 ring-inset rounded-md py-1.5 gap-4 min-h-[2.5rem] hover:ring-pri-hover focus-within:ring-2   focus-within:ring-pri transition-all duration-300">
             {tags.map((tg, i) => (
@@ -145,7 +150,7 @@ const Editor = () => {
         </div>
 
         <div className="mt-4 w-full relative flex gap-4 items-center">
-          {coverImg && (
+          {coverImg ? (
             <div className="aspect-video max-w-[200px]">
               <img
                 src={URL.createObjectURL(coverImg)}
@@ -153,7 +158,18 @@ const Editor = () => {
                 className="w-full h-full object-scale-down"
               />
             </div>
+          ) : data?.image ? (
+            <div className="aspect-video max-w-[200px]">
+              <img
+                src={data.image}
+                alt="cover photo"
+                className="w-full h-full object-scale-down"
+              />
+            </div>
+          ) : (
+            ""
           )}
+
           <label
             htmlFor="cover-photo"
             className="block text-sm h-10 leading-9 font-medium border-0 ring-1 w-fit px-2 rounded-md hover:ring-pri-hover ring-inset transition-all duration-300 focus:ring-2 focus:ring-pri active:ring-pri text-gray-900 cursor-pointer"

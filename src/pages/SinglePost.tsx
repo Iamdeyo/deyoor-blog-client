@@ -1,5 +1,5 @@
 import useGetAPost from "../hooks/useGetAPost";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useGetAUser from "../hooks/useGetAUser";
 
 const SinglePost = () => {
@@ -42,6 +42,19 @@ const SinglePost = () => {
         </>
       ) : (
         <>
+          {data?.authorId === user?.id && (
+            <div className="justify-end flex items-center gap-1">
+              <Link
+                to={`/post/${data?.slug}/edit`}
+                className="px-3 py-1.5 rounded-md ring-1 ring-transparent ring-inset hover:underline hover:text-pri-hover focus:ring-2 focus:ring-pri-hover active:bg-pri active:text-white transition-all duration-300"
+              >
+                Edit
+              </Link>
+              <button className="px-3 py-1.5 rounded-md border-0 ring-1 text-red-300 ring-red-300 hover:ring-red-400 hover:text-red-400 focus:ring-2 active:bg-red-400 active:text-white transition-all duration-300">
+                Delete
+              </button>
+            </div>
+          )}
           <h1 className="mt-8 mb-6 leading-[2.375rem] text-[2rem] font-bold text-text-dark md:leading-[3.25rem] md:mb-8 md:mt-12 md:text-[2.75rem]">
             {data?.title}
           </h1>
@@ -63,17 +76,20 @@ const SinglePost = () => {
               <p className="leading-6 text-text-dark text-base capitalize">
                 {user?.username}
               </p>
-              <span className="text-text-light text-sm flex items-center">
-                <span> 8 min read </span>
-                <span className="mx-4 border border-text-light"></span>
-                <span className="capitalize">
-                  {new Date(data?.updatedAt!).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+              {data && (
+                <span className="text-text-light text-sm flex items-center">
+                  <span> {data?.readTime} min read </span>
+                  <span className="mx-4 border border-text-light"></span>
+                  <span className="capitalize">
+                    {data?.updatedAt &&
+                      new Date(data?.updatedAt!).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                  </span>
                 </span>
-              </span>
+              )}
             </div>
           </div>
           <div className="flex gap-3 items-center flex-wrap mt-10 md:border-b md:pb-4">

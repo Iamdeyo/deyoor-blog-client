@@ -28,4 +28,5 @@ export interface PostType {
   createdAt: string;
   updatedAt: string;
   authorId: string;
+  readTime: number;
 }
