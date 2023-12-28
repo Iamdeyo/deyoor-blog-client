@@ -1,12 +1,15 @@
 import useGetAPost from "../hooks/useGetAPost";
 import { Link, useParams } from "react-router-dom";
 import useGetAUser from "../hooks/useGetAUser";
+import { AuthContext } from "../context/AuthContext";
+import { AuthContextValue } from "../types/types";
+import { useContext } from "react";
 
 const SinglePost = () => {
   const { slug } = useParams();
 
   const { data, isLoading } = useGetAPost(slug!);
-  const { data: user } = useGetAUser(data?.authorId!);
+  const { user } = useContext(AuthContext) as AuthContextValue;
   return (
     <>
       {isLoading ? (

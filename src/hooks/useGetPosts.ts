@@ -1,18 +1,28 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SERVER_URL } from "../constants";
-import { ResponseBody } from "../types/types";
+import { AuthContextValue, ResponseBody } from "../types/types";
+import { AuthContext } from "../context/AuthContext";
 
-const useGetPosts = () => {
+const useGetPosts = (filterPost: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<any[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const { token, user } = useContext(AuthContext) as AuthContextValue;
+
   useEffect(() => {
+    const apiUrl =
+      filterPost === "myPost" && user
+        ? `${SERVER_URL}/post/me/${user.id}`
+        : `${SERVER_URL}/post`;
     const controller = new AbortController();
     const signal = controller.signal;
     const fetchData = async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/post`, { signal });
+        const response = await fetch(apiUrl, {
+          signal,
+          headers: { authorization: `Bearer ${token}` },
+        });
         const result: ResponseBody = await response.json();
         setData(result.data);
       } catch (err: any) {
@@ -32,7 +42,7 @@ const useGetPosts = () => {
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [filterPost, user]);
   return { data, isLoading, error };
 };
 

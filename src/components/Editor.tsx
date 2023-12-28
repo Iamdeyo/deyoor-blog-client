@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { createRef, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
@@ -13,6 +13,7 @@ const Editor = ({ data }: { data: PostType | null }) => {
   const [tag, setTag] = useState<string>("");
   const [tags, setTags] = useState<string[]>(data ? data.tags : []);
   const [coverImg, setCoverImg] = useState<any>(null);
+  const ref = createRef<HTMLInputElement>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token } = useContext(AuthContext) as AuthContextValue;
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const Editor = ({ data }: { data: PostType | null }) => {
   };
 
   const checkRequiredFields = () => {
-    if (content === "") {
+    if (content.replace(/<[^>]+>/g, "") === "") {
       toast.error("Content is required");
       return false;
     } else if (title === "") {
@@ -82,6 +83,13 @@ const Editor = ({ data }: { data: PostType | null }) => {
         setIsLoading(false);
         toast.error(err.message);
       }
+    }
+  };
+
+  const removeCoverImg = () => {
+    setCoverImg(null);
+    if (ref.current) {
+      ref.current.value = "";
     }
   };
 
@@ -179,6 +187,7 @@ const Editor = ({ data }: { data: PostType | null }) => {
               type="file"
               name="cover-photo"
               id="cover-photo"
+              ref={ref}
               onChange={(e) => setCoverImg(e.target.files && e.target.files[0])}
               accept="image/png, image/jpeg, image/gif"
               className="absolute left-0 top-0 opacity-0 w-full h-full "
@@ -187,7 +196,7 @@ const Editor = ({ data }: { data: PostType | null }) => {
           {coverImg && (
             <button
               className="text-red-400 hover:text-red-500 ring-inset ring-1 ring-transparent border-0 hover:ring-red-500 rounded-md focus:ring-2 focus:ring-red-500 relative font-medium  text-sm h-10 leading-9 px-2 transition-all duration-300"
-              onClick={() => setCoverImg(null)}
+              onClick={removeCoverImg}
             >
               Remove
             </button>

@@ -33,8 +33,6 @@ const useGetUser = () => {
     };
     if (token) {
       fetchData();
-    } else {
-      navigate("/login");
     }
 
     // Cleanup function to cancel the request if the component is unmounted

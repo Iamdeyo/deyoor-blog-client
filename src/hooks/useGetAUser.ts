@@ -8,7 +8,7 @@ const useGetAUser = (id: string | null) => {
   const [data, setData] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const { token, user } = useContext(AuthContext) as AuthContextValue;
+  const { user } = useContext(AuthContext) as AuthContextValue;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -17,7 +17,6 @@ const useGetAUser = (id: string | null) => {
       try {
         const response = await fetch(`${SERVER_URL}/user/${id}`, {
           signal,
-          headers: { authorization: `Bearer ${token}` },
         });
         const result: ResponseBody = await response.json();
         setData(result.data);

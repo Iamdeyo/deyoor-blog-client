@@ -1,14 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SERVER_URL } from "../constants";
-import { AuthContextValue, PostType, ResponseBody } from "../types/types";
-import { AuthContext } from "../context/AuthContext";
+import { PostType, ResponseBody } from "../types/types";
 
 const useGetAPost = (slug: string) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<PostType | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  const { token } = useContext(AuthContext) as AuthContextValue;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -17,7 +14,6 @@ const useGetAPost = (slug: string) => {
       try {
         const response = await fetch(`${SERVER_URL}/post/${slug}`, {
           signal,
-          headers: { authorization: `Bearer ${token}` },
         });
         const result: ResponseBody = await response.json();
         setData(result.data);
