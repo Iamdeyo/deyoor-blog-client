@@ -8,6 +8,7 @@ export default {
         "pri-hover": "#9104fcc5",
         "text-dark": "#242424",
         "text-light": "#6B6B6B",
+        skeleton: "#ebe4e0",
       },
     },
   },

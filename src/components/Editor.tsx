@@ -35,11 +35,11 @@ const Editor = ({ data }: { data: PostType | null }) => {
   };
 
   const checkRequiredFields = () => {
-    if (content.replace(/<[^>]+>/g, "") === "") {
-      toast.error("Content is required");
-      return false;
-    } else if (title === "") {
+    if (title === "") {
       toast.error("Title is required");
+      return false;
+    } else if (content.replace(/<[^>]+>/g, "") === "") {
+      toast.error("Content is required");
       return false;
     } else if (coverImg === null && data === null) {
       toast.error("Cover image is required");
@@ -62,7 +62,12 @@ const Editor = ({ data }: { data: PostType | null }) => {
         if (coverImg) {
           body.append("image", coverImg);
         }
-        tags.forEach((tag) => body.append("tags", tag));
+        if (tags.length === 1) {
+          body.append("tags", tags[0]);
+          body.append("tags", "");
+        } else if (tags.length > 1) {
+          tags.forEach((tag) => body.append("tags", tag));
+        }
 
         const res = await fetch(apiUrl, {
           method: apiMethod,
@@ -205,10 +210,32 @@ const Editor = ({ data }: { data: PostType | null }) => {
 
         <button
           disabled={isLoading}
-          className=" px-3 py-2 w-full sm:max-w-[120px] text-center bg-pri mt-10 text-white rounded-md hover:bg-pri-hover disabled:cursor-not-allowed disabled:opacity-50"
+          className=" px-3 py-2 w-full flex items-center justify-center sm:max-w-[120px] text-center bg-pri mt-10 text-white rounded-md hover:bg-pri-hover disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => handleSubmit()}
         >
           save
+          {isLoading && (
+            <svg
+              className="animate-spin relative left-5  h-6 w-6 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          )}
         </button>
 
         {/* drag & drop */}

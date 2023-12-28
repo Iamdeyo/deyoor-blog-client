@@ -33,6 +33,7 @@ const useGetAUser = (id: string | null) => {
 
     if (user?.id === id) {
       setData(user);
+      setIsLoading(false);
     } else if (id) {
       fetchData();
     }

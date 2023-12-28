@@ -24,7 +24,11 @@ const useGetPosts = (filterPost: any) => {
           headers: { authorization: `Bearer ${token}` },
         });
         const result: ResponseBody = await response.json();
-        setData(result.data);
+        if (!response.ok) {
+          setError(result.message);
+        } else {
+          setData(result.data);
+        }
       } catch (err: any) {
         if (err.name === "AbortError") {
           console.log("Fetch aborted due to component unmount");
