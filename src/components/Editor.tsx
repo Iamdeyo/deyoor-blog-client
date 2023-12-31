@@ -100,7 +100,7 @@ const Editor = ({ data }: { data: PostType | null }) => {
 
   return (
     <>
-      <div className="pb-10 bg-white">
+      <div className="pb-10 px-6 md:px-0 bg-white">
         <label
           htmlFor="title"
           className="block text-sm font-medium leading-6 text-gray-900"
