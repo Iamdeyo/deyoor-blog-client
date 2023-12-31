@@ -5,18 +5,32 @@ import { Helmet } from "react-helmet";
 import useGetAUser from "../hooks/useGetAUser";
 import { AuthContext } from "../context/AuthContext";
 import { AuthContextValue } from "../types/types";
-import DeletePost from "../components/DeletePost";
+import DeletePost from "../components/modals/DeletePost";
 
 const SinglePost = () => {
   const { slug } = useParams();
   const [open, setOpen] = useState<boolean>(false);
-  const { data, isLoading } = useGetAPost(slug!);
+  const { data, isLoading, error } = useGetAPost(slug!);
   const { user } = useContext(AuthContext) as AuthContextValue;
 
   const { data: author } = useGetAUser(data?.authorId!);
-
   if (isLoading) {
     return <LoadingUiSkeletons />;
+  }
+  if (error) {
+    return (
+      <div className="grid gap-4 place-content-center h-[300px]">
+        <p className="text-2xl md:text-4xl font-semibold text-text-dark">
+          Error While Loading
+        </p>
+        <button
+          className="px-3 font-medium w-fit mx-auto py-1.5 rounded-md ring-1 ring-text-light ring-inset text-text-light hover:ring-pri-hover hover:text-pri-hover focus:ring-2 focus:ring-pri-hover active:bg-pri active:text-white transition-all duration-300"
+          onClick={() => window.location.reload()}
+        >
+          Tap here to retry
+        </button>
+      </div>
+    );
   }
   return (
     <>
@@ -112,32 +126,34 @@ const SinglePost = () => {
 const LoadingUiSkeletons = () => {
   return (
     <>
-      <h1 className="mt-8 md:mt-6 h-8 rounded-md animate-pulse bg-[#ebe4e0]"></h1>
+      <div className="px-6 md:px-0">
+        <h1 className="mt-8 md:mt-6 h-8 rounded-md animate-pulse bg-[#ebe4e0]"></h1>
 
-      <h1 className="mt-2 mb-6 md:mb-8 h-8 w-8/12 rounded-md animate-pulse bg-[#ebe4e0]"></h1>
-      <div className="flex gap-3 animate-pulse">
-        <div className="w-11 h-11 rounded-full bg-[#ebe4e0]"></div>
-        <div className="flex flex-col w-full gap-2">
-          <p className="h-4 bg-[#ebe4e0] w-3/12"></p>
-          <p className="h-3 bg-[#ebe4e0] w-2/12"></p>
+        <h1 className="mt-2 mb-6 md:mb-8 h-8 w-8/12 rounded-md animate-pulse bg-[#ebe4e0]"></h1>
+        <div className="flex gap-3 animate-pulse">
+          <div className="w-11 h-11 rounded-full bg-[#ebe4e0]"></div>
+          <div className="flex flex-col w-full gap-2">
+            <p className="h-4 bg-[#ebe4e0] w-3/12"></p>
+            <p className="h-3 bg-[#ebe4e0] w-2/12"></p>
+          </div>
         </div>
-      </div>
-      <div className="animate-pulse flex w-full gap-3 items-center mt-10 md:pb-4">
-        <span className="inline-block h-9 rounded-3xl bg-[#ebe4e0] w-20"></span>
-        <span className="inline-block h-9 rounded-3xl bg-[#ebe4e0] w-16"></span>
-      </div>
-      <div className="mt-8 w-full aspect-video animate-pulse">
-        <div className="h-full w-full bg-[#ebe4e0] rounded-md"></div>
-      </div>
-      <div className="mt-8 animate-pulse">
-        <p className="h-6 mb-3 bg-[#ebe4e0] rounded-md w-10/12"></p>
-        <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-full"></p>
-        <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-full"></p>
-        <p className="h-4 mb-5 bg-[#ebe4e0] rounded-md w-3/12"></p>
-        <p className="h-6 mb-3 bg-[#ebe4e0] rounded-md w-10/12"></p>
-        <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-full"></p>
-        <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-full"></p>
-        <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-3/12"></p>
+        <div className="animate-pulse flex w-full gap-3 items-center mt-10 md:pb-4">
+          <span className="inline-block h-9 rounded-3xl bg-[#ebe4e0] w-20"></span>
+          <span className="inline-block h-9 rounded-3xl bg-[#ebe4e0] w-16"></span>
+        </div>
+        <div className="mt-8 w-full aspect-video animate-pulse">
+          <div className="h-full w-full bg-[#ebe4e0] rounded-md"></div>
+        </div>
+        <div className="mt-8 animate-pulse">
+          <p className="h-6 mb-3 bg-[#ebe4e0] rounded-md w-10/12"></p>
+          <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-full"></p>
+          <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-full"></p>
+          <p className="h-4 mb-5 bg-[#ebe4e0] rounded-md w-3/12"></p>
+          <p className="h-6 mb-3 bg-[#ebe4e0] rounded-md w-10/12"></p>
+          <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-full"></p>
+          <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-full"></p>
+          <p className="h-4 mb-2 bg-[#ebe4e0] rounded-md w-3/12"></p>
+        </div>
       </div>
     </>
   );

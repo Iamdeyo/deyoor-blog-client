@@ -3,7 +3,7 @@ import { SERVER_URL } from "../constants";
 import { AuthContextValue, ResponseBody } from "../types/types";
 import { AuthContext } from "../context/AuthContext";
 
-const useGetPosts = (filterPost: any) => {
+const useGetPosts = (filterQuery: string | null) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<any[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -12,7 +12,7 @@ const useGetPosts = (filterPost: any) => {
 
   useEffect(() => {
     const apiUrl =
-      filterPost === "myPost" && user
+      filterQuery === "my-post" && user
         ? `${SERVER_URL}/post/me/${user.id}`
         : `${SERVER_URL}/post`;
     const controller = new AbortController();
@@ -46,7 +46,7 @@ const useGetPosts = (filterPost: any) => {
     return () => {
       controller.abort();
     };
-  }, [filterPost, user]);
+  }, [filterQuery, user]);
   return { data, isLoading, error };
 };
 

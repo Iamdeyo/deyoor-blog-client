@@ -1,9 +1,9 @@
 import { Dispatch, Fragment, useContext, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { AuthContext } from "../context/AuthContext";
-import { AuthContextValue, ResponseBody } from "../types/types";
-import { SERVER_URL } from "../constants";
+import { AuthContext } from "../../context/AuthContext";
+import { AuthContextValue, ResponseBody } from "../../types/types";
+import { SERVER_URL } from "../../constants";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

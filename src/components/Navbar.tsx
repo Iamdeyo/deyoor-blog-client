@@ -1,4 +1,4 @@
-import { Fragment, useContext } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
@@ -9,20 +9,17 @@ import { AuthContext } from "../context/AuthContext";
 import { AuthContextValue } from "../types/types";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import Logout from "./modals/Logout";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const Navbar = () => {
-  const { user, token, handleLogout } = useContext(
-    AuthContext
-  ) as AuthContextValue;
+  const { user, token } = useContext(AuthContext) as AuthContextValue;
 
-  const logout = () => {
-    handleLogout();
-    toast.info(`logged out`);
-  };
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
     <Disclosure as="nav" className="border-b-2">
       <>
@@ -119,7 +116,7 @@ const Navbar = () => {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            onClick={logout}
+                            onClick={() => setOpen(true)}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700 w-full text-start"
@@ -151,6 +148,7 @@ const Navbar = () => {
             )}
           </div>
         </div>
+        <Logout open={open} setOpen={setOpen} />
       </>
     </Disclosure>
   );

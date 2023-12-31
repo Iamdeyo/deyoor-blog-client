@@ -47,10 +47,10 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <AuthContextProvider>
-      <RouterProvider router={router} />
-      <ToastContainer />
-    </AuthContextProvider>
-  </React.StrictMode>
+  //  <React.StrictMode>
+  <AuthContextProvider>
+    <RouterProvider router={router} />
+    <ToastContainer />
+  </AuthContextProvider>
+  // </React.StrictMode>
 );

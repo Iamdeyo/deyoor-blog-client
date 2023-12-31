@@ -82,7 +82,7 @@ const Editor = ({ data }: { data: PostType | null }) => {
         if (data.data) {
           setIsLoading(false);
           toast.success(data.message);
-          navigate("/");
+          navigate("/?q=my-post");
         }
       } catch (err: any) {
         setIsLoading(false);

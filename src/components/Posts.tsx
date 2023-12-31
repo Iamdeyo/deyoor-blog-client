@@ -1,27 +1,15 @@
-import { SetStateAction, useContext, useState } from "react";
+import { useContext } from "react";
 import Post from "./Post";
 import useGetPosts from "../hooks/useGetPosts";
 import { AuthContext } from "../context/AuthContext";
 import { AuthContextValue } from "../types/types";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const Posts = () => {
-  const [filterPost, setFilterPost] = useState<"allPost" | "myPost">("allPost");
-  const handleFilterPost = (filter: SetStateAction<"allPost" | "myPost">) => {
-    setFilterPost(filter);
-    handleUpdate("myPost");
-  };
+  const [searchParams] = useSearchParams();
+  const filterQuery = searchParams.get("q");
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const handleUpdate = (value: string) => {
-    setSearchParams({
-      ...searchParams,
-      q: value, // Update or add a search parameter
-    });
-  };
-
-  const { data, isLoading, error } = useGetPosts(filterPost);
+  const { data, isLoading, error } = useGetPosts(filterQuery);
   const { user } = useContext(AuthContext) as AuthContextValue;
 
   if (isLoading) {
@@ -54,27 +42,27 @@ const Posts = () => {
     <>
       <main className="mx-auto max-w-7xl pt-6">
         <div className="flex relative gap-4 px-6 text-sm text-text-light">
-          <div
-            onClick={() => handleFilterPost("allPost")}
+          <Link
+            to={"/"}
             className={`pb-4 border-b cursor-pointer transition-all ${
-              filterPost === "allPost"
+              !filterQuery
                 ? "border-b-text-dark text-text-dark"
                 : "border-b-transparent"
             }`}
           >
             <p className="hover:text-text-dark">All Post</p>
-          </div>
+          </Link>
           {user && (
-            <div
-              onClick={() => handleFilterPost("myPost")}
+            <Link
+              to={"/?q=my-post"}
               className={`pb-4 border-b cursor-pointer transition-all ${
-                filterPost === "myPost"
+                filterQuery === "my-post"
                   ? "border-b-text-dark text-text-dark"
                   : "border-b-transparent"
               }`}
             >
               <p className="hover:text-text-dark">My Post</p>
-            </div>
+            </Link>
           )}
           <div className="border-b w-full absolute bottom-0 -z-[1] left-0"></div>
         </div>
@@ -92,7 +80,7 @@ const Posts = () => {
 
 const LoadingUiSkeletons = () => {
   return (
-    <div className="flex flex-col animate-pulse pt-6">
+    <div className="flex flex-col animate-pulse pt-6 px-6 md:px-0">
       <div className="text-sm flex items-center mb-2">
         <span className="mr-2">
           <span className="h-6 w-6 rounded-full block bg-skeleton text-white font-bold leading-8 text-sm"></span>

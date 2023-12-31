@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet";
 const EditPost = () => {
   const { slug } = useParams();
 
-  const { data, isLoading } = useGetAPost(slug!);
+  const { data, isLoading, error } = useGetAPost(slug!);
   return (
     <>
       {data && (

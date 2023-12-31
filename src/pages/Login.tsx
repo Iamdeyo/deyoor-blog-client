@@ -33,7 +33,7 @@ const Login = () => {
 
   useEffect(() => {
     if (token) {
-      navigate("/");
+      navigate("/?q=my-post");
     }
   }, [token]);
 
