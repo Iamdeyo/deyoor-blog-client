@@ -1,4 +1,4 @@
-import { createRef, useContext, useState } from "react";
+import { createRef, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
@@ -15,7 +15,7 @@ const Editor = ({ data }: { data: PostType | null }) => {
   const [coverImg, setCoverImg] = useState<any>(null);
   const ref = createRef<HTMLInputElement>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { token } = useContext(AuthContext) as AuthContextValue;
+  const { token, user } = useContext(AuthContext) as AuthContextValue;
   const navigate = useNavigate();
 
   const removeTag = (tagToRemove: string) => {
@@ -98,6 +98,18 @@ const Editor = ({ data }: { data: PostType | null }) => {
     }
   };
 
+  useEffect(() => {
+    if (!user) {
+      toast.info("Login or Sign up to create or edit post");
+      navigate("/login");
+    } else {
+      if (data && data.authorId !== user?.id) {
+        toast.error("Not Authorizated");
+        toast.info("Can't edit another authors post");
+        navigate("/?q=my-post");
+      }
+    }
+  }, [user, data]);
   return (
     <>
       <div className="pb-10 px-6 md:px-0 bg-white">
