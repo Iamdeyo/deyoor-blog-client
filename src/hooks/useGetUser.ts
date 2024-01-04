@@ -7,9 +7,10 @@ import { SERVER_URL } from "../constants";
 const useGetUser = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { token, handleSetUser } = useContext(AuthContext) as AuthContextValue;
+  const { token, user, handleSetUser } = useContext(
+    AuthContext
+  ) as AuthContextValue;
 
-  const navigate = useNavigate();
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -31,7 +32,7 @@ const useGetUser = () => {
         setIsLoading(false);
       }
     };
-    if (token) {
+    if (token && !user) {
       fetchData();
     }
 
@@ -39,7 +40,7 @@ const useGetUser = () => {
     return () => {
       controller.abort();
     };
-  }, [token]);
+  }, [token, user]);
   return {
     isLoading,
     error,

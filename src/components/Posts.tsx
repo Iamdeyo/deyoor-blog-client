@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { createRef, useContext, useEffect, useRef, useState } from "react";
 import Post from "./Post";
 import useGetPosts from "../hooks/useGetPosts";
 import { AuthContext } from "../context/AuthContext";
@@ -9,9 +9,27 @@ import Error from "./Error";
 const Posts = () => {
   const [searchParams] = useSearchParams();
   const filterQuery = searchParams.get("q");
+  const [page, setPage] = useState(1);
 
-  const { data, isLoading, error } = useGetPosts(filterQuery);
+  const containerRef = createRef<HTMLInputElement>();
+
+  const { data, isLoading, error, totalPages } = useGetPosts(filterQuery, page);
   const { user } = useContext(AuthContext) as AuthContextValue;
+
+  const handleScroll = () => {
+    const container = containerRef.current;
+    if (
+      container &&
+      container.scrollTop + container.clientHeight === container.scrollHeight &&
+      totalPages > page
+    ) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    setPage(1);
+  }, [filterQuery]);
 
   if (isLoading) {
     return (
@@ -29,7 +47,7 @@ const Posts = () => {
 
   return (
     <>
-      <main className="mx-auto max-w-7xl pt-6">
+      <main className="mx-auto max-w-7xl h-screen overflow-hidden pt-6 sticky top-0 left-0 flex flex-col">
         <div className="flex relative gap-4 px-6 text-sm text-text-light">
           <Link
             to={"/"}
@@ -55,13 +73,23 @@ const Posts = () => {
           )}
           <div className="border-b w-full absolute bottom-0 -z-[1] left-0"></div>
         </div>
-        <section>
-          {data?.map((item) => (
-            <div key={item.id}>
-              <Post data={item} />
-            </div>
-          ))}
+        <section
+          ref={containerRef}
+          onScroll={handleScroll}
+          className="overflow-hidden overflow-y-auto post-container relative"
+        >
+          {data.length > 0 &&
+            data?.map((item) => (
+              <div key={item.id}>
+                <Post data={item} />
+              </div>
+            ))}
         </section>
+        {totalPages === page && (
+          <p className="text-text-light text-center py-2 text-sm">
+            No More Posts
+          </p>
+        )}
       </main>
     </>
   );

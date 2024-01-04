@@ -7,7 +7,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { AuthContext } from "../context/AuthContext";
 import { AuthContextValue } from "../types/types";
-import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Logout from "./modals/Logout";
 

@@ -9,11 +9,12 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
   const getToken = localStorage.getItem("token")
     ? localStorage.getItem("token")
     : null;
-  // const getUser = localStorage.getItem('user') ? localStorage.getItem('user') : null;
+  const getUser = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")!)
+    : null;
 
   const [token, setToken] = useState<string | null>(getToken);
-  const [user, setUser] = useState<User | null>(null);
-
+  const [user, setUser] = useState<User | null>(getUser);
   const handleSetToken = (token: string) => {
     localStorage.setItem("token", token);
     setToken(token);

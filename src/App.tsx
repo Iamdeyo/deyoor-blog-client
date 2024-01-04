@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-2xl pt-6 pb-20 sm:px-4 md:px-0">
+      <main className="mx-auto h-screen max-w-2xl pt-6 pb-20 sm:px-4 md:px-0">
         <Outlet />
       </main>
     </>
