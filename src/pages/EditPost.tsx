@@ -2,11 +2,16 @@ import { useParams } from "react-router-dom";
 import Editor from "../components/Editor";
 import useGetAPost from "../hooks/useGetAPost";
 import { Helmet } from "react-helmet";
+import Error from "../components/Error";
 
 const EditPost = () => {
   const { slug } = useParams();
 
-  const { data, isLoading, error } = useGetAPost(slug!);
+  const { data, error } = useGetAPost(slug!);
+
+  if (error) {
+    return <Error />;
+  }
   return (
     <>
       {data && (

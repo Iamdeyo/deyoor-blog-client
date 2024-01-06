@@ -42,7 +42,7 @@ const useGetAUser = (id: string | null) => {
     return () => {
       controller.abort();
     };
-  }, [id]);
+  }, [id, user]);
   return { data, isLoading, error };
 };
 

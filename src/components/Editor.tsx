@@ -109,7 +109,7 @@ const Editor = ({ data }: { data: PostType | null }) => {
         navigate("/?q=my-post");
       }
     }
-  }, [user, data]);
+  }, [user, data, navigate]);
   return (
     <>
       <div className="pb-10 px-6 md:px-0 bg-white">

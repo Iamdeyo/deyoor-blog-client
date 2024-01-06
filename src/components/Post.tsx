@@ -10,6 +10,7 @@ const Post = ({ data }: { data: PostType }) => {
     year: "numeric",
   });
 
+  /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
   const { data: user, isLoading } = useGetAUser(data?.authorId!);
   if (isLoading) {
     return <LoadingUiSkeletons />;

@@ -64,7 +64,7 @@ const Register = () => {
     if (token) {
       navigate("/?q=my-post");
     }
-  }, [token]);
+  }, [token, navigate]);
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);

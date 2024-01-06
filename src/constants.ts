@@ -1,1 +1,1 @@
-export const SERVER_URL = "https://ethical-hettie-dtech.koyeb.app/api";
+export const SERVER_URL = "https://deyoblogapi.onrender.com/api";

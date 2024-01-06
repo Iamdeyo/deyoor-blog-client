@@ -1,4 +1,4 @@
-import { createRef, useContext, useEffect, useRef, useState } from "react";
+import { createRef, useContext, useEffect, useState } from "react";
 import Post from "./Post";
 import useGetPosts from "../hooks/useGetPosts";
 import { AuthContext } from "../context/AuthContext";

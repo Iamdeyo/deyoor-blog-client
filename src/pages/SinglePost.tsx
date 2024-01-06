@@ -7,6 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import { AuthContextValue } from "../types/types";
 import DeletePost from "../components/modals/DeletePost";
 import Error from "../components/Error";
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const SinglePost = () => {
   const { slug } = useParams();

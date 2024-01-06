@@ -35,7 +35,7 @@ const Login = () => {
     if (token) {
       navigate("/?q=my-post");
     }
-  }, [token]);
+  }, [token, navigate]);
 
   const {
     register,

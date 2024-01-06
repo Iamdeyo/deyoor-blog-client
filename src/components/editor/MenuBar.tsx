@@ -22,13 +22,6 @@ const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) {
     return null;
   }
-  const addImage = () => {
-    const url = window.prompt("URL");
-
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
-  };
 
   const setLink = useCallback(() => {
     const previousUrl = editor.getAttributes("link").href;
@@ -49,6 +42,15 @@ const MenuBar = ({ editor }: { editor: any }) => {
     // update link
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
   }, [editor]);
+
+  const addImage = () => {
+    const url = window.prompt("URL");
+
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+  };
+
   return (
     <div className="menu-bar flex flex-wrap justify-center border border-b-0 border-[rgba(59,130,246,0.5)] rounded-md rounded-b-none">
       <button

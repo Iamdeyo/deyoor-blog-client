@@ -1,4 +1,4 @@
-import { Dispatch, Fragment, useContext, useRef, useState } from "react";
+import { Dispatch, Fragment, useContext, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { AuthContextValue } from "../../types/types";

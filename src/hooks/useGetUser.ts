@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { AuthContextValue, ResponseBody } from "../types/types";
-import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../constants";
 
 const useGetUser = () => {
