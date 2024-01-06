@@ -19,10 +19,6 @@ import {
 import { AiOutlineUnorderedList, AiOutlineOrderedList } from "react-icons/ai";
 
 const MenuBar = ({ editor }: { editor: any }) => {
-  if (!editor) {
-    return null;
-  }
-
   const setLink = useCallback(() => {
     const previousUrl = editor.getAttributes("link").href;
     const url = window.prompt("URL", previousUrl);

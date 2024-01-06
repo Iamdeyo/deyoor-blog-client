@@ -35,11 +35,19 @@ const Editor = ({ data }: { data: PostType | null }) => {
   };
 
   const checkRequiredFields = () => {
-    if (title === "") {
-      toast.error("Title is required");
+    if (title.length < 5) {
+      toast.error(
+        title.length === 0
+          ? "Title is required"
+          : "Title must be at least 5 characters long"
+      );
       return false;
-    } else if (content.replace(/<[^>]+>/g, "") === "") {
-      toast.error("Content is required");
+    } else if (content.replace(/<[^>]+>/g, "").length < 10) {
+      toast.error(
+        content.replace(/<[^>]+>/g, "").length === 0
+          ? "Content is required"
+          : "Content must be at least 10 characters long"
+      );
       return false;
     } else if (coverImg === null && data === null) {
       toast.error("Cover image is required");
@@ -52,16 +60,17 @@ const Editor = ({ data }: { data: PostType | null }) => {
       ? `${SERVER_URL}/post/${data.id}`
       : `${SERVER_URL}/post`;
     const apiMethod = data ? "PATCH" : "POST";
+
     if (checkRequiredFields()) {
       setIsLoading(true);
 
       try {
         const body = new FormData();
+
         body.append("title", title);
         body.append("content", content);
-        if (coverImg) {
-          body.append("image", coverImg);
-        }
+        body.append("image", coverImg);
+
         if (tags.length === 1) {
           body.append("tags", tags[0]);
           body.append("tags", "");

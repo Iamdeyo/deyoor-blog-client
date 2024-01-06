@@ -34,7 +34,7 @@ const DeletePost = ({
       } else {
         toast.success(data.message);
         setIsLoading(false);
-        navigate("/");
+        navigate("/?q=my-post");
       }
     } catch (error) {
       toast.error("An error occurred");
