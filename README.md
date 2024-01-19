@@ -1,27 +1,62 @@
-# React + TypeScript + Vite
+DeyoBlog Frontend Documentation
+===============================
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Introduction
+------------
 
-Currently, two official plugins are available:
+Welcome to the DeyoBlog Frontend documentation. The DeyoBlog web app is developed with Vite, React, TypeScript, TailwindCSS, and features the Tiptap text editor. This frontend allows users to read blogs, sign up or sign in to post blogs, and manage their own blogs by editing or deleting them.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Technologies Used
+-----------------
 
-## Expanding the ESLint configuration
+*   **Framework:** Vite, React
+*   **Language:** TypeScript
+*   **CSS Framework:** TailwindCSS
+*   **Text Editor:** Tiptap
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Getting Started
+---------------
 
-- Configure the top-level `parserOptions` property like this:
+1.  **Clone the Repository:**
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+    git clone https://github.com/your-username/your-frontend-repo.git
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+3.  **Install Dependencies:**
+
+    cd your-frontend-repo
+    npm install
+
+5.  **Run Locally:**
+
+    npm run dev
+
+The development server will start, and you can access the web app at `http://localhost:3000` by default.
+
+GitHub Repository
+-----------------
+
+*   **Backend GitHub Repository:** [Link to Back-End Repository](https://github.com/Iamdeyo/deyoor-blog-api)
+
+Live Demo
+---------
+
+*   **Live Demo:** [Link to Live Demo](https://deyoblog.onrender.com/)
+
+Features
+--------
+
+### Read Blogs
+
+Browse and read blogs posted by various users on the DeyoBlog platform.
+
+### Sign Up / Sign In
+
+Create a new account or sign in to your existing account to start posting blogs.
+
+### Post Blogs
+
+Once logged in, users can create and publish their own blogs.
+
+### Edit and Delete Blogs
+
+Manage your blogs by editing or deleting them as needed.
